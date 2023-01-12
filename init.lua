@@ -21,7 +21,9 @@ require('packer').startup(function(use)
 	use 'hrsh7th/cmp-cmdline'
 	use 'hrsh7th/cmp-nvim-lsp-signature-help'
 	use({ "L3MON4D3/LuaSnip", tag = "v1.*" })
+	use 'NLKNguyen/papercolor-theme'
 	use 'navarasu/onedark.nvim'
+	use 'morhetz/gruvbox'
 	use { 'nvim-lualine/lualine.nvim', requires = { 'kyazdani42/nvim-web-devicons', opt = true } }
 	use 'j-hui/fidget.nvim'
 	use 'tpope/vim-surround'
@@ -34,10 +36,16 @@ require('packer').startup(function(use)
 	use 'williamboman/mason.nvim'
 	use 'williamboman/mason-lspconfig.nvim'
 	use 'numToStr/Comment.nvim'
+	use 'vim-test/vim-test'
 end)
 require "fidget".setup()
-require('onedark').load()
 require('Comment').setup()
+
+-- Color scheme
+-- require('onedark').load()
+vim.opt.background = 'light'
+vim.cmd('colorscheme gruvbox')
+vim.opt.termguicolors = true
 
 -- Setup completion plugin
 local cmp = require('cmp')
@@ -68,14 +76,14 @@ local on_buffer_attach_to_lsp_client = function(_, buffer_number)
 	local nmap = function(keys, func, desc)
 		vim.keymap.set('n', keys, func, { buffer = buffer_number, desc = desc })
 	end
-	nmap('gd', vim.lsp.buf.definition, '[G]oto [D]efinition')
-	nmap('<leader>D', vim.lsp.buf.type_definition, 'Type [D]efinition')
+	nmap('gd', vim.lsp.buf.definition, '[G]oto [d]efinition')
+	nmap('<leader>D', vim.lsp.buf.type_definition, 'goto type [D]efinition')
 	nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
 	nmap('gI', vim.lsp.buf.implementation, '[G]oto [I]mplementation')
 	nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
 	nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
-	nmap('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
-	nmap('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
+	nmap('<leader>sd', require('telescope.builtin').lsp_document_symbols, '[S]ymbols in [D]ocument')
+	nmap('<leader>sw', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[S]ymbols in [W]orkspace')
 	nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
 	nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
 	nmap(']d', vim.diagnostic.goto_next, 'Go to next [d]iagnostic')
@@ -89,8 +97,11 @@ local on_buffer_attach_to_lsp_client = function(_, buffer_number)
 			vim.lsp.buf.format()
 		end
 	end, { desc = 'Format current buffer with LSP' })
-	local format_on_save_group = vim.api.nvim_create_augroup('Format on save', { clear = true })
-	vim.api.nvim_create_autocmd('BufWritePre', { buffer = buffer_number, group = format_on_save_group, command = 'Format' })
+	-- local format_on_save_group = vim.api.nvim_create_augroup('Format on save', { clear = true })
+	-- Only works for most recently attached buffer.
+	-- vim.api.nvim_create_autocmd('BufWritePre', { buffer = buffer_number, group = format_on_save_group, command = 'Format' })
+	--	Erroneously tries to format whatever is open after attaching, like the git commit window from git-fugitive.
+	-- vim.api.nvim_create_autocmd('BufWritePre', { group = format_on_save_group, command = 'Format' })
 end
 local server_settings = {
 	sumneko_lua = {
@@ -203,3 +214,11 @@ vim.keymap.set('n', '<leader><space>', telescope_builtin.buffers, { desc = '[ ] 
 vim.keymap.set('n', '<leader>/', telescope_builtin.current_buffer_fuzzy_find,
 	{ desc = '[/] Fuzzily search in current buffer]' })
 vim.keymap.set('n', '<leader>sd', telescope_builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
+
+-- vim-test config
+vim.g['test#strategy'] = 'neovim'
+vim.g['test#neovim#start_normal'] = 1
+vim.keymap.set('n', '<leader>tn', ':TestNearest<CR>', { desc = '[t]est [n]earest test', silent = true })
+vim.keymap.set('n', '<leader>tf', ':TestFile<CR>', { desc = '[t]est [f]ile', silent = true })
+vim.keymap.set('n', '<leader>tl', ':TestLast<CR>', { desc = '[t]est [l]ast test', silent = true })
+vim.keymap.set('n', '<leader>tv', ':TestVisit<CR>', { desc = 'go [t]est file last [v]isited', silent = true })
