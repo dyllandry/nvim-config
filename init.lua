@@ -39,7 +39,8 @@ require('packer').startup(function(use)
 	use 'numToStr/Comment.nvim'
 	use 'vim-test/vim-test'
 	use "kyazdani42/nvim-web-devicons"
-	use  "folke/trouble.nvim"
+	use "folke/trouble.nvim"
+	use "tpope/vim-abolish"
 end)
 require "fidget".setup()
 require('Comment').setup()
