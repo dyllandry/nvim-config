@@ -1,4 +1,5 @@
 vim.keymap.set('i', 'jk', '<Esc>', { desc = 'exit insert mode' })
+vim.keymap.set('t', 'jk', '<C-\\><C-n>', { desc = 'exit terminal insert mode' })
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.scrolloff = 4
@@ -24,7 +25,7 @@ require('packer').startup(function(use)
 	use 'NLKNguyen/papercolor-theme'
 	use 'navarasu/onedark.nvim'
 	use 'morhetz/gruvbox'
-	use { 'nvim-lualine/lualine.nvim', requires = { 'kyazdani42/nvim-web-devicons', opt = true } }
+	use { 'nvim-lualine/lualine.nvim' }
 	use 'j-hui/fidget.nvim'
 	use 'tpope/vim-surround'
 	use 'tpope/vim-repeat'
@@ -37,15 +38,18 @@ require('packer').startup(function(use)
 	use 'williamboman/mason-lspconfig.nvim'
 	use 'numToStr/Comment.nvim'
 	use 'vim-test/vim-test'
+	use "kyazdani42/nvim-web-devicons"
+	use  "folke/trouble.nvim"
 end)
 require "fidget".setup()
 require('Comment').setup()
+require("trouble").setup()
 
 -- Color scheme
--- require('onedark').load()
-vim.opt.background = 'light'
-vim.cmd('colorscheme gruvbox')
-vim.opt.termguicolors = true
+require('onedark').load()
+-- vim.opt.background = 'light'
+-- vim.cmd('colorscheme gruvbox')
+-- vim.opt.termguicolors = true
 
 -- Setup completion plugin
 local cmp = require('cmp')
@@ -91,17 +95,15 @@ local on_buffer_attach_to_lsp_client = function(_, buffer_number)
 	vim.api.nvim_buf_create_user_command(buffer_number, 'Format', function()
 		local eslint_client = vim.lsp.get_active_clients({ bufnr = buffer_number, name = 'eslint' })[1]
 		if eslint_client then
-			-- no clue why this is causing a treesitter highlight problem
 			vim.cmd('EslintFixAll')
+			vim.lsp.buf.format()
 		else
 			vim.lsp.buf.format()
 		end
 	end, { desc = 'Format current buffer with LSP' })
-	-- local format_on_save_group = vim.api.nvim_create_augroup('Format on save', { clear = true })
-	-- Only works for most recently attached buffer.
-	-- vim.api.nvim_create_autocmd('BufWritePre', { buffer = buffer_number, group = format_on_save_group, command = 'Format' })
-	--	Erroneously tries to format whatever is open after attaching, like the git commit window from git-fugitive.
-	-- vim.api.nvim_create_autocmd('BufWritePre', { group = format_on_save_group, command = 'Format' })
+	local format_on_save_group = vim.api.nvim_create_augroup('Format on save', {})
+	vim.api.nvim_clear_autocmds({ buffer = buffer_number, group = format_on_save_group })
+	vim.api.nvim_create_autocmd('BufWritePre', { buffer = buffer_number, group = format_on_save_group, command = 'Format' })
 end
 local server_settings = {
 	sumneko_lua = {
