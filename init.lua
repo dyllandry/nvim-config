@@ -9,6 +9,7 @@ vim.opt.softtabstop = 2
 vim.opt.shiftwidth = 2
 vim.opt.signcolumn = 'yes'
 vim.opt.updatetime = 100
+vim.opt.ignorecase = true
 vim.g.mapleader = ' '
 
 -- Plugins
@@ -37,13 +38,18 @@ require('packer').startup(function(use)
 	use 'williamboman/mason.nvim'
 	use 'williamboman/mason-lspconfig.nvim'
 	use 'numToStr/Comment.nvim'
+	use 'JoosepAlviste/nvim-ts-context-commentstring'
 	use 'vim-test/vim-test'
 	use "kyazdani42/nvim-web-devicons"
 	use "folke/trouble.nvim"
 	use "tpope/vim-abolish"
+	use "preservim/nerdtree"
+	use { "ThePrimeagen/harpoon", requires = { 'nvim-lua/plenary.nvim' } }
 end)
 require "fidget".setup()
-require('Comment').setup()
+require('Comment').setup({
+	pre_hook = require('ts_context_commentstring.integrations.comment_nvim').create_pre_hook(),
+})
 require("trouble").setup()
 
 -- Color scheme
@@ -192,6 +198,10 @@ require('nvim-treesitter.configs').setup({
 	highlight = {
 		enable = true,
 	},
+	context_commentstring = {
+		enable = true,
+		enable_autocmd = false,
+	},
 })
 
 local telescope = require('telescope')
@@ -225,3 +235,17 @@ vim.keymap.set('n', '<leader>tn', ':TestNearest<CR>', { desc = '[t]est [n]earest
 vim.keymap.set('n', '<leader>tf', ':TestFile<CR>', { desc = '[t]est [f]ile', silent = true })
 vim.keymap.set('n', '<leader>tl', ':TestLast<CR>', { desc = '[t]est [l]ast test', silent = true })
 vim.keymap.set('n', '<leader>tv', ':TestVisit<CR>', { desc = 'go [t]est file last [v]isited', silent = true })
+
+-- Harpoon config
+vim.keymap.set('n', '<leader>hm', function() require("harpoon.ui").toggle_quick_menu() end,
+	{ desc = '[h]arpoon [m]enu', silent = true })
+vim.keymap.set('n', '<leader>m', function() require("harpoon.mark").add_file() end,
+	{ desc = 'harpoon [m]ark', silent = true })
+vim.keymap.set('n', '<leader>j', function() require("harpoon.ui").nav_file(1) end,
+	{ desc = 'harpoon 1st file ([j],k,l,;)', silent = true })
+vim.keymap.set('n', '<leader>k', function() require("harpoon.ui").nav_file(2) end,
+	{ desc = 'harpoon 2nd file (j,[k],l,;)', silent = true })
+vim.keymap.set('n', '<leader>l', function() require("harpoon.ui").nav_file(3) end,
+	{ desc = 'harpoon 3rd file (j,k,[l],;)', silent = true })
+vim.keymap.set('n', '<leader>;', function() require("harpoon.ui").nav_file(4) end,
+	{ desc = 'harpoon 3rd file (j,k,l,[;])', silent = true })
