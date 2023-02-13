@@ -11,6 +11,7 @@ vim.opt.signcolumn = 'yes'
 vim.opt.updatetime = 100
 vim.opt.ignorecase = true
 vim.g.mapleader = ' '
+vim.g.NERDTreeWinSize = 50
 
 -- Plugins
 require('packer').startup(function(use)
@@ -103,7 +104,6 @@ local on_buffer_attach_to_lsp_client = function(_, buffer_number)
 		local eslint_client = vim.lsp.get_active_clients({ bufnr = buffer_number, name = 'eslint' })[1]
 		if eslint_client then
 			vim.cmd('EslintFixAll')
-			vim.lsp.buf.format()
 		else
 			vim.lsp.buf.format()
 		end
