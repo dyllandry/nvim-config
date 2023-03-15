@@ -12,6 +12,7 @@ vim.opt.updatetime = 100
 vim.opt.ignorecase = true
 vim.g.mapleader = ' '
 vim.g.NERDTreeWinSize = 50
+vim.opt.conceallevel = 2
 
 -- Plugins
 require('packer').startup(function(use)
@@ -35,6 +36,7 @@ require('packer').startup(function(use)
 	use 'tpope/vim-sleuth'
 	use 'airblade/vim-gitgutter'
 	use { 'nvim-telescope/telescope.nvim', tag = '0.1.0', requires = { 'nvim-lua/plenary.nvim' } }
+	use { "nvim-telescope/telescope-file-browser.nvim" }
 	use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
 	use 'williamboman/mason.nvim'
 	use 'williamboman/mason-lspconfig.nvim'
@@ -46,6 +48,7 @@ require('packer').startup(function(use)
 	use "tpope/vim-abolish"
 	use "preservim/nerdtree"
 	use { "ThePrimeagen/harpoon", requires = { 'nvim-lua/plenary.nvim' } }
+	use { "preservim/vim-markdown", requires = { 'godlygeek/tabular' } }
 end)
 require "fidget".setup()
 require('Comment').setup({
@@ -60,7 +63,15 @@ require('onedark').load()
 -- vim.opt.termguicolors = true
 
 -- Setup completion plugin
+-- Along with cmp mappings, supports using tab to jump in a snippet.
+-- https://github.com/hrsh7th/nvim-cmp/wiki/Example-mappings#luasnip
+local has_words_before = function()
+  unpack = unpack or table.unpack
+  local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+  return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+end
 local cmp = require('cmp')
+local luasnip = require("luasnip")
 cmp.setup({
 	mapping = cmp.mapping.preset.insert({
 		['<C-Space>'] = cmp.mapping.complete(),
@@ -68,6 +79,26 @@ cmp.setup({
 		['<CR>'] = cmp.mapping.confirm({ select = true }),
 		['<C-f>'] = cmp.mapping.scroll_docs(4),
 		['<C-b>'] = cmp.mapping.scroll_docs(-4),
+		 ["<Tab>"] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        cmp.select_next_item()
+      elseif luasnip.expand_or_jumpable() then
+        luasnip.expand_or_jump()
+      elseif has_words_before() then
+        cmp.complete()
+      else
+        fallback()
+      end
+    end, { "i", "s" }),
+    ["<S-Tab>"] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        cmp.select_prev_item()
+      elseif luasnip.jumpable(-1) then
+        luasnip.jump(-1)
+      else
+        fallback()
+      end
+    end, { "i", "s" }),
 	}),
 	sources = cmp.config.sources({
 		{ name = 'nvim_lsp', group_index = 1 },
@@ -199,6 +230,7 @@ require('nvim-treesitter.configs').setup({
 	auto_install = true,
 	highlight = {
 		enable = true,
+		disable = { 'markdown' }
 	},
 	context_commentstring = {
 		enable = true,
@@ -218,6 +250,7 @@ telescope.setup {
 	},
 }
 pcall(telescope.load_extension, 'fzf')
+pcall(telescope.load_extension, "file_browser")
 local telescope_builtin = require('telescope.builtin')
 vim.keymap.set('n', '<leader>sk', telescope_builtin.keymaps, { desc = '[S]earch [K]eymaps' })
 vim.keymap.set('n', '<leader>sh', telescope_builtin.help_tags, { desc = '[S]earch [H]elp' })
