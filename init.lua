@@ -48,7 +48,6 @@ require('packer').startup(function(use)
 	use "tpope/vim-abolish"
 	use "preservim/nerdtree"
 	use { "ThePrimeagen/harpoon", requires = { 'nvim-lua/plenary.nvim' } }
-	use { "preservim/vim-markdown", requires = { 'godlygeek/tabular' } }
 end)
 require "fidget".setup()
 require('Comment').setup({
