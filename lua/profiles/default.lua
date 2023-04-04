@@ -283,3 +283,8 @@ vim.keymap.set('n', '<leader>l', function() require("harpoon.ui").nav_file(3) en
 	{ desc = 'harpoon 3rd file (j,k,[l],;)', silent = true })
 vim.keymap.set('n', '<leader>;', function() require("harpoon.ui").nav_file(4) end,
 	{ desc = 'harpoon 3rd file (j,k,l,[;])', silent = true })
+
+-- For the Nand to Tetris course. They provide hdl files, but use a different
+-- syntax that doesn't exactly match vim's normal hdl syntax highlighting. So I
+-- just decided to turn it off instead of having things be highlighted weird.
+vim.api.nvim_create_autocmd('BufEnter', { pattern = { "*.hdl" }, command = 'set filetype=' })
