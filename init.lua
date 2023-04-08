@@ -37,8 +37,18 @@ end
 local last_used_vim_profile = read_last_used_vim_profile()
 update_last_used_vim_profile()
 
-if vim_profile() == "default" then
-	require("profiles/default")
-else
-	require("profiles/".. vim_profile())
+local profile = require("profiles/".. vim_profile())
+
+local packer = require('packer')
+
+packer.init({ autoremove = true })
+packer.reset()
+packer.use('wbthomason/packer.nvim')
+profile.packer_spec(packer.use)
+packer.install()
+
+if last_used_vim_profile ~= vim_profile() then
+	packer.clean()
 end
+
+packer.compile()

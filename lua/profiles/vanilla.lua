@@ -10,6 +10,8 @@ vim.o.ignorecase = true
 vim.o.smartcase = true
 
 -- Load plugins
-require("packer").startup(function()
-	-- print("hi from inside packer startup function")
-end)
+return {
+	packer_spec = function(use)
+		use "preservim/nerdtree"
+	end
+}
