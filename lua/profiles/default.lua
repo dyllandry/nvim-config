@@ -22,6 +22,18 @@ vim.opt.scrolloff = 4
 -- Don't remember why this is set. Something to do about speeding up certain actions.
 vim.opt.updatetime = 100
 
+-- Don't wrap lines
+vim.opt.wrap = false
+
+vim.api.nvim_create_autocmd(
+	'BufEnter',
+	{ pattern = { "*.md" },
+	callback = function()
+		vim.opt.wrap = true
+		vim.opt.linebreak = true
+	end
+})
+
 return {
 	packer_spec = function(use)
 		use('tpope/vim-fugitive')
