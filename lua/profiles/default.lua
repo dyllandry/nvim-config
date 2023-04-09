@@ -34,8 +34,7 @@ vim.api.nvim_create_autocmd(
 	end
 })
 
-return {
-	packer_spec = function(use)
+local packer_spec = function(use)
 		use('tpope/vim-fugitive')
 		use('tpope/vim-surround')
 		use('tpope/vim-repeat')
@@ -144,7 +143,6 @@ return {
 			end
 		})
 	end
-}
 
 -- Start of LSP stuff
 -- #############################################################################
@@ -156,6 +154,13 @@ return {
 -- 1) install a language server on your computer
 -- 2) configure the nvim LSP client to connect
 -- 3) configure keymaps & autocmds to utilize LSP features
+-- ```
+-- vim.lsp.start({
+--   name = 'my-server-name',
+--   cmd = {'name-of-language-server-executable'},
+--   root_dir = vim.fs.dirname(vim.fs.find({'setup.py', 'pyproject.toml'}, { upward = true })[1]),
+-- })
+-- ```
 --
 -- Starting an LSP client will report diagnostics via vim.diagnostic (see
 -- :help). Use vim.diagnostic.show() to see them, optionally args (nil, 0) to
@@ -167,6 +172,13 @@ return {
 -- - formatexpr: to provide formatting via mapping gq
 -- Setup features like hover, rename, etc, in a LspAttach autocmd so they're
 -- only active if anLSP client is running.
+-- ```
+-- vim.api.nvim_create_autocmd('LspAttach', {
+--   callback = function(args)
+--     vim.keymap.set('n', 'K', vim.lsp.buf.hover, { buffer = args.buf })
+--   end,
+-- })
+-- ```
 --
 -- Common features
 -- - vim.lsp.buf.hover()
@@ -177,9 +189,58 @@ return {
 --
 -- To see what features your server provides:
 -- `:lua =vim.lsp.get_active_clients()[1].server_capabilities`
+--
+-- TODO: add explanation of these things
+-- There are plugins make setting up LSPs easier.
+-- - nvim-lspconfig
+-- - williamboman/mason.nvim
+-- - williamboman/mason-lspconfig.nvim
+--
+-- TODO: These do completion
+-- - nvim-cmp
+
+vim.api.nvim_create_autocmd(
+	'BufEnter',
+	{
+		pattern = "*.rs",
+		callback = function()
+			vim.lsp.start({
+				name = "my rust lsp client",
+				cmd = {"rust-analyzer"},
+				root_dir = vim.fs.dirname(
+					vim.fs.find("Cargo.toml", { upward = true })[1]
+				)
+			})
+			local buffer_number = vim.api.nvim_get_current_buf()
+			-- Some key maps
+			vim.keymap.set(
+				"n",
+				"]d",
+				vim.diagnostic.goto_next,
+				{
+					buffer = buffer_number,
+					desc = "Go to next [d]iagnostic"
+				}
+			)
+			vim.keymap.set(
+				"n",
+				"[d",
+				vim.diagnostic.goto_prev,
+				{
+					buffer = buffer_number,
+					desc = "Go to prev [d]iagnostic"
+				}
+			)
+		end
+	}
+)
 
 -- End of LSP stuff
 -- #############################################################################
+
+return {
+	packer_spec = packer_spec
+}
 
 -- Everything below this line is my old config.
 -- #############################################################################
