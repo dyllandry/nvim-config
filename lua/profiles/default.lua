@@ -213,6 +213,8 @@ vim.api.nvim_create_autocmd(
 			})
 			local buffer_number = vim.api.nvim_get_current_buf()
 			-- Some key maps
+			-- TODO: eventually these keymaps should be applied generically across
+			-- LSPs.
 			vim.keymap.set(
 				"n",
 				"]d",
