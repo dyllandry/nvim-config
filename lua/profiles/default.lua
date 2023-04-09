@@ -146,12 +146,46 @@ return {
 	end
 }
 
+-- Start of LSP stuff
+-- #############################################################################
+-- To write this, I'm just reading through `:help lsp`
+-- Neovim supports LSP and can act as a client to LSP servers.
+-- LSP provides features like go-to-definition, completion, rename, format, etc.
+--
+-- The steps to get LSP features are:
+-- 1) install a language server on your computer
+-- 2) configure the nvim LSP client to connect
+-- 3) configure keymaps & autocmds to utilize LSP features
+--
+-- Starting an LSP client will report diagnostics via vim.diagnostic (see
+-- :help). Use vim.diagnostic.show() to see them, optionally args (nil, 0) to
+-- specify current buffer.
+--
+-- Starting an LSP sets buffer options like
+-- - omnifunc: provides completion
+-- - tagfunc: provides go-to-definition
+-- - formatexpr: to provide formatting via mapping gq
+-- Setup features like hover, rename, etc, in a LspAttach autocmd so they're
+-- only active if anLSP client is running.
+--
+-- Common features
+-- - vim.lsp.buf.hover()
+-- - vim.lsp.buf.format()
+-- - vim.lsp.buf.references()
+-- - vim.lsp.buf.implementation()
+-- - vim.lsp.buf.code_action()
+--
+-- To see what features your server provides:
+-- `:lua =vim.lsp.get_active_clients()[1].server_capabilities`
+
+-- End of LSP stuff
+-- #############################################################################
+
 -- Everything below this line is my old config.
 -- #############################################################################
 
 -- Plugins
 -- require('packer').startup(function(use)
--- 	use 'wbthomason/packer.nvim'
 -- 	use 'neovim/nvim-lspconfig'
 -- 	use 'hrsh7th/nvim-cmp'
 -- 	use 'hrsh7th/cmp-nvim-lsp'
