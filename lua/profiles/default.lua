@@ -231,6 +231,15 @@ vim.api.nvim_create_autocmd(
 					desc = "Go to prev [d]iagnostic"
 				}
 			)
+			vim.keymap.set(
+				"n",
+				"<leader>sw",
+				require('telescope.builtin').lsp_dynamic_workspace_symbols,
+				{
+					buffer = buffer_number,
+					desc = "[S]ymbols in [W]orkspace"
+				}
+			)
 		end
 	}
 )
