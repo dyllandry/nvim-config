@@ -242,6 +242,15 @@ vim.api.nvim_create_autocmd(
 					desc = "[S]ymbols in [W]orkspace"
 				}
 			)
+			vim.keymap.set(
+				"n",
+				"K",
+				vim.lsp.buf.hover,
+				{
+					buffer = buffer_number,
+					desc = "Hover"
+				}
+			)
 		end
 	}
 )
