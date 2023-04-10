@@ -251,6 +251,33 @@ vim.api.nvim_create_autocmd(
 					desc = "Hover"
 				}
 			)
+			vim.keymap.set(
+				"n",
+				"gd",
+				vim.lsp.buf.definition,
+				{
+					buffer = buffer_number,
+					desc = "[G]oto [d]efinition"
+				}
+			)
+			vim.keymap.set(
+				"n",
+				"<leader>rn",
+				vim.lsp.buf.rename,
+				{
+					buffer = buffer_number,
+					desc = "[R]e[n]ame"
+				}
+			)
+			vim.keymap.set(
+				"n",
+				"<leader>ca",
+				vim.lsp.buf.code_action,
+				{
+					buffer = buffer_number,
+					desc = "[C]ode [A]ction"
+				}
+			)
 		end
 	}
 )
@@ -346,17 +373,10 @@ return {
 -- 		vim.keymap.set('n', keys, func, { buffer = buffer_number, desc = desc })
 -- 	end
 -- 	nmap('gd', vim.lsp.buf.definition, '[G]oto [d]efinition')
--- 	nmap('<leader>D', vim.lsp.buf.type_definition, 'goto type [D]efinition')
 -- 	nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
 -- 	nmap('gI', vim.lsp.buf.implementation, '[G]oto [I]mplementation')
--- 	nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
--- 	nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
 -- 	nmap('<leader>sd', require('telescope.builtin').lsp_document_symbols, '[S]ymbols in [D]ocument')
--- 	nmap('<leader>sw', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[S]ymbols in [W]orkspace')
--- 	nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
 -- 	nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
--- 	nmap(']d', vim.diagnostic.goto_next, 'Go to next [d]iagnostic')
--- 	nmap('[d', vim.diagnostic.goto_prev, 'Go to prev [d]iagnostic')
 -- 	vim.api.nvim_buf_create_user_command(buffer_number, 'Format', function()
 -- 		local eslint_client = vim.lsp.get_active_clients({ bufnr = buffer_number, name = 'eslint' })[1]
 -- 		if eslint_client then
