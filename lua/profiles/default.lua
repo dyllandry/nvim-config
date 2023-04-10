@@ -105,8 +105,6 @@ local packer_spec = function(use)
 					-- Disabled for now, I want to be able to see the effects before and after
 					highlight = {
 						enable = true,
-						-- I don't know why this was disabled. I think because I thought the non-treesitter one was better
-						-- disable = { 'markdown' }
 					},
 					context_commentstring = {
 						enable = true,
@@ -273,6 +271,19 @@ vim.api.nvim_create_autocmd(
 				"n",
 				"<leader>ca",
 				vim.lsp.buf.code_action,
+				{
+					buffer = buffer_number,
+					desc = "[C]ode [A]ction"
+				}
+			)
+			vim.keymap.set(
+				"n",
+				"<leader>pr",
+				function()
+					-- For some reason writing "vim.cmd('')" causes a treesitter error.
+					local cmd = vim.cmd
+					cmd("silent !tmux split-window 'cargo run; bash -i'")
+				end,
 				{
 					buffer = buffer_number,
 					desc = "[C]ode [A]ction"
