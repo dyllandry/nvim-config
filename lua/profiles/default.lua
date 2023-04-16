@@ -286,7 +286,9 @@ vim.api.nvim_create_autocmd(
 				end,
 				{
 					buffer = buffer_number,
-					desc = "[C]ode [A]ction"
+					desc = "[P]rogram [R]un"
+				}
+			)
 				}
 			)
 		end
