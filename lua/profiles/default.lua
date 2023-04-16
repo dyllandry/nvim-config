@@ -289,6 +289,13 @@ vim.api.nvim_create_autocmd(
 					desc = "[P]rogram [R]un"
 				}
 			)
+			vim.keymap.set(
+				"n",
+				'<leader>sd',
+				require('telescope.builtin').lsp_document_symbols,
+				{
+					buffer = buffer_number,
+					desc = "[S]ymbols in [D]ocument"
 				}
 			)
 		end
