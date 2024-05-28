@@ -26,9 +26,10 @@ end
 -- Add lazy to runtimepath
 vim.opt.rtp:prepend(lazypath)
 
+-- Setup vim plugins using lazy
 require("lazy").setup({
-    -- Automatically set shiftwidth and expandtab options.
-    -- Will check project's editorconfig file.
+    -- Automatically set tab settings.
+    -- Will set according to project's editorconfig file.
     'tpope/vim-sleuth',
     -- Comment plugin.
     -- Eventually want to add treesitter and integrate with
