@@ -35,6 +35,13 @@ require("lazy").setup({
     -- Eventually want to add treesitter and integrate with
     -- "JoosepAlviste/nvim-ts-context-commentstring" to support commenting
     -- embedded languages like in vue components.
-    { 'numToStr/Comment.nvim', config = true, lazy = false }
+    { 'numToStr/Comment.nvim', config = true, lazy = false },
+    -- File tree explorer.
+    {
+      'preservim/nerdtree',
+      config = function ()
+        vim.g.NERDTreeWinSize = 50
+      end
+    },
 })
 
