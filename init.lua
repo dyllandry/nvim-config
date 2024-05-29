@@ -1,3 +1,7 @@
+--------------------------------------------------------------------------------
+-- Generic Options -------------------------------------------------------------
+--------------------------------------------------------------------------------
+
 vim.keymap.set('i', 'jk', '<Esc>')
 vim.opt.relativenumber = true
 vim.opt.number = true
@@ -5,6 +9,7 @@ vim.opt.scrolloff = 10
 -- Ignore case unless capital letter in search.
 vim.o.ignorecase = true; vim.o.smartcase = true;
 
+-- Markdown file settings
 vim.api.nvim_create_autocmd('BufEnter', {
     pattern = '*.md',
     callback = function()
@@ -13,7 +18,10 @@ vim.api.nvim_create_autocmd('BufEnter', {
     end
 })
 
--- Bootstrap plugin manager called "lazy.nvim"
+--------------------------------------------------------------------------------
+-- Install lazy.nvim plugin manager --------------------------------------------
+--------------------------------------------------------------------------------
+
 -- If lazy is not in user's data directory, git clone it.
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
@@ -28,6 +36,10 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end
 -- Add lazy to runtimepath
 vim.opt.rtp:prepend(lazypath)
+
+--------------------------------------------------------------------------------
+-- Plugins ---------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 -- Setup vim plugins using lazy
 require("lazy").setup({
@@ -49,3 +61,4 @@ require("lazy").setup({
       end
     },
 })
+
