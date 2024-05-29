@@ -8,6 +8,7 @@ vim.opt.number = true
 vim.opt.scrolloff = 10
 -- Ignore case unless capital letter in search.
 vim.o.ignorecase = true; vim.o.smartcase = true;
+vim.g.mapleader = ' '
 
 -- Markdown file settings
 vim.api.nvim_create_autocmd('BufEnter', {
@@ -60,5 +61,38 @@ require("lazy").setup({
         vim.g.NERDTreeWinSize = 50
       end
     },
+    -- Fuzzy file finder over any lists. Made of pickers, sorters, and
+    -- previewers, it can be used to find files, language server results, and
+    -- more.
+    {
+        'nvim-telescope/telescope.nvim',
+        tag = '0.1.2',
+        dependencies = { 'nvim-lua/plenary.nvim' },
+        config = function()
+            require('telescope').setup{
+                defaults = {
+                    file_ignore_patterns = { 'package%-lock%.json' },
+                    mappings = {
+                        i = {
+                            -- This disables telescope's default mapping for
+                            -- Ctrl-u in insert mode from scrolling the preview
+                            -- window up. Instead, it will clear the prompt.
+                            ["<C-u>"] = false
+                        },
+                    },
+                    -- This will change the layout of telescope so it fits well
+                    -- in skinny windows.
+                    layout_strategy = 'vertical',
+                    layout_config = {
+                        preview_cutoff = 22
+                    }
+                }
+            }
+            local builtin = require('telescope.builtin')
+            vim.keymap.set('n', '<leader>sf', builtin.find_files, {})
+            vim.keymap.set('n', '<leader>sg', builtin.live_grep, {})
+        end
+    },
+
 })
 
