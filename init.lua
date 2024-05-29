@@ -2,6 +2,8 @@ vim.keymap.set('i', 'jk', '<Esc>')
 vim.opt.relativenumber = true
 vim.opt.number = true
 vim.opt.scrolloff = 10
+-- Ignore case unless capital letter in search.
+vim.o.ignorecase = true; vim.o.smartcase = true;
 
 vim.api.nvim_create_autocmd('BufEnter', {
     pattern = '*.md',
