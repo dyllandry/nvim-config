@@ -21,6 +21,10 @@ vim.api.nvim_create_autocmd('BufEnter', {
     end
 })
 
+-- Speeds up loading of nvim-ts-context-commentstring by skipping "backwards
+-- compatibility routines".
+vim.g.skip_ts_context_commentstring_module = true
+
 --------------------------------------------------------------------------------
 -- Install lazy.nvim plugin manager --------------------------------------------
 --------------------------------------------------------------------------------
@@ -51,10 +55,12 @@ require("lazy").setup({
     'tpope/vim-sleuth',
 
     -- Comment plugin.
-    -- Eventually want to add treesitter and integrate with
-    -- "JoosepAlviste/nvim-ts-context-commentstring" to support commenting
-    -- embedded languages like in vue components.
-    { 'numToStr/Comment.nvim', config = true, lazy = false },
+    {
+        'numToStr/Comment.nvim',
+        config = true,
+        lazy = false,
+        dependencies = "JoosepAlviste/nvim-ts-context-commentstring"
+    },
 
     -- File tree explorer.
     {
@@ -63,6 +69,7 @@ require("lazy").setup({
         vim.g.NERDTreeWinSize = 50
       end
     },
+
     -- Fuzzy file finder over any lists. Made of pickers, sorters, and
     -- previewers, it can be used to find files, language server results, and
     -- more.
@@ -96,5 +103,74 @@ require("lazy").setup({
         end
     },
 
+    -- onedark is a color scheme.
+    {
+        "navarasu/onedark.nvim",
+        config = function()
+            require('onedark').setup {
+                style = 'warm'
+            }
+            require('onedark').load()
+            -- I found when writing parenthesis in comments
+            -- that when the matching paren was highlighted,
+            -- the foreground and background colors were the
+            -- same and the bracket would turn invisible.
+            -- This command sets the background color of the
+            -- matching parenthesis to a darker color.
+            vim.cmd('hi MatchParen guibg=#444444')
+        end
+    },
+
+    -- treesitter is a parsing system, it builds and updates syntax trees.
+    -- It's possible to use treesitter with Nvim to have really intelligent
+    -- syntax highlighting and stuff. I think Nvim comes with and installs
+    -- treesitter. nvim-treesitter is a package that's meant to make using
+    -- Nvim's treesitter interface easier. It makes setting up language
+    -- parsers easy, and provides syntax highlighting based on those
+    -- parser's output.
+    {
+        "nvim-treesitter/nvim-treesitter",
+        -- Because each version of nvim-treesitter only works with specific
+        -- parser versions, each time we install or update nvim-treesitter, we
+        -- have to update all of our installed parsers.
+        build = ":TSUpdate",
+        config = function () 
+            -- Just what nvim-treesitter makes you do to set configs, have to
+            -- use this configs module and call .setup() on it.
+            local configs = require("nvim-treesitter.configs")
+            configs.setup({
+                -- Makes these get installed right away if they aren't
+                -- installed yet. Like for example if you've opened nvim for
+                -- the first time.
+                ensure_installed = {
+                    "typescript",
+                    "javascript",
+                    "html",
+                    "css",
+                    "vue",
+                    "lua",
+                },
+                -- Enables the parsers to be installed and setup async so nvim
+                -- still opens fast when first opened and parsers in
+                -- ensure_installed aren't installed yet.
+                sync_install = false,
+                -- Enables highlighting based off the built syntax tree.
+                highlight = { enable = true },
+                -- Makes the = command indent the right number of tabs/spaces.
+                indent = { enable = true },
+            })
+        end
+        },
+
+        -- nvim-ts-context-commentstring is a plugin that sets 'commentstring'
+        -- depending on where the cursor is and uses treesitter. Seems
+        -- redundant with Comment.nvim, but Comment.nvim itself didn't
+        -- implement all the complicated logic for how to properly comment
+        -- embedded languages in typescript. However, this plugin,
+        -- nvim-ts-context-commentstring, did. I think the two plugins work
+        -- together. This plugin is already installed by setting it as a
+        -- dependency of other plugins, but put it here as as standalone plugin
+        -- to centralize this comment.
+        "JoosepAlviste/nvim-ts-context-commentstring"
 })
 
