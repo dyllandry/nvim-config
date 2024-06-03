@@ -9,6 +9,7 @@ vim.opt.scrolloff = 10
 -- Ignore case unless capital letter in search.
 vim.o.ignorecase = true; vim.o.smartcase = true;
 vim.g.mapleader = ' '
+vim.o.tabstop = 4
 
 -- Markdown file settings
 vim.api.nvim_create_autocmd('BufEnter', {
@@ -16,6 +17,7 @@ vim.api.nvim_create_autocmd('BufEnter', {
     callback = function()
         vim.opt.wrap = true
         vim.opt.linebreak = true
+        vim.o.breakindent = true
     end
 })
 
