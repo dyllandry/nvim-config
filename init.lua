@@ -54,6 +54,9 @@ require("lazy").setup({
     -- Will set according to project's editorconfig file.
     'tpope/vim-sleuth',
 
+    -- Plugin to easily surround text.
+    'tpope/vim-surround',
+
     -- Comment plugin.
     {
         'numToStr/Comment.nvim',
