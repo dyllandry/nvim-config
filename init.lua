@@ -5,6 +5,17 @@
 --
 -- Use none-ls (was null-ls before that was deprecated) to support nvim.prettier
 -- and let other non-lsp sources interface with nvim's lsp client.
+-- Can none-ls be used with lsp config?
+
+--------------------------------------------------------------------------------
+-- Prettier Plans --------------------------------------------------------------
+--------------------------------------------------------------------------------
+
+-- I could migrate to null-ls then use nvim.prettier through
+-- vim.lsp.buf.format().
+--
+-- I could make a autocommand that runs prettier installed globally on the
+-- current file if the current project has prettier installed.
 
 --------------------------------------------------------------------------------
 -- Generic Options -------------------------------------------------------------
@@ -79,6 +90,55 @@ require("lazy").setup({
       config = function ()
         vim.g.NERDTreeWinSize = 50
       end
+    },
+
+    -- Code formatter for JavaScript. Integrates with none-ls to enable
+    -- formatting through nvim's lsp format function.
+    {
+        'MunifTanjim/prettier.nvim',
+        opts = {
+            bin = 'prettierd',
+        }
+    },
+
+    -- none-ls (continuation of deprecated project null-ls) allows non-lsp
+    -- tools to integrate with nvim's lsp functionality. For example, a non-lsp
+    -- tool like a spell checker could integrate with nvim's lsp client
+    -- diagnostics and appear next to diagnostics provided by real lsp servers.
+    {
+        'nvimtools/none-ls.nvim',
+        dependencies = { 'nvim-lua/plenary.nvim' },
+        config = function()
+            local group = vim.api.nvim_create_augroup("lsp_format_on_save", { clear = false })
+            local event = "BufWritePre" -- or "BufWritePost"
+            local async = event == "BufWritePost"
+            require('null-ls').setup({
+                on_attach = function(client, bufnr)
+                    if client.supports_method("textDocument/formatting") then
+                        -- format on key press
+                        vim.keymap.set("n", "<Leader>f", function()
+                            vim.lsp.buf.format({ bufnr = vim.api.nvim_get_current_buf() })
+                        end, { buffer = bufnr, desc = "[lsp] format" })
+                        -- format on save
+                        vim.api.nvim_clear_autocmds({ buffer = bufnr, group = group })
+                        vim.api.nvim_create_autocmd(event, {
+                            buffer = bufnr,
+                            group = group,
+                            callback = function()
+                                vim.lsp.buf.format({ bufnr = bufnr, async = async })
+                            end,
+                            desc = "[lsp] format on save",
+                        })
+                    end
+                    -- format range
+                    if client.supports_method("textDocument/rangeFormatting") then
+                        vim.keymap.set("x", "<Leader>f", function()
+                            vim.lsp.buf.format({ bufnr = vim.api.nvim_get_current_buf() })
+                        end, { buffer = bufnr, desc = "[lsp] format" })
+                    end
+                end,
+            })
+        end
     },
 
     -- Fuzzy file finder over any lists. Made of pickers, sorters, and
