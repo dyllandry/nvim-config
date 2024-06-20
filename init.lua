@@ -109,6 +109,17 @@ require("lazy").setup({
     -- Git plugin
     'tpope/vim-fugitive',
 
+    -- Show diff signs in sign column
+    {
+        'airblade/vim-gitgutter',
+        config = function()
+            -- Always show column to prevent jumping when signs appear.
+            vim.o.signcolumn = "yes"
+            -- Shorten time it takes for signs to appear.
+            vim.o.updatetime = 100
+        end
+    },
+
     -- none-ls (continuation of deprecated project null-ls) allows non-lsp
     -- tools to integrate with nvim's lsp functionality. For example, a non-lsp
     -- tool like a spell checker could integrate with nvim's lsp client
