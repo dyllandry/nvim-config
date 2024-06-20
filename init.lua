@@ -7,6 +7,11 @@
 -- and let other non-lsp sources interface with nvim's lsp client.
 -- Can none-ls be used with lsp config?
 
+-- Support code action to extract visual selection to function.
+-- Running into this bug: https://github.com/jose-elias-alvarez/typescript.nvim/issues/17
+-- Maybe I can translate their implementation to Lua.
+-- https://github.com/jose-elias-alvarez/typescript.nvim/commit/e4b780d6b686585cb345e16d444fd3d303da91bb
+
 --------------------------------------------------------------------------------
 -- Prettier Plans --------------------------------------------------------------
 --------------------------------------------------------------------------------
@@ -100,6 +105,9 @@ require("lazy").setup({
             bin = 'prettierd',
         }
     },
+
+    -- Git plugin
+    'tpope/vim-fugitive',
 
     -- none-ls (continuation of deprecated project null-ls) allows non-lsp
     -- tools to integrate with nvim's lsp functionality. For example, a non-lsp
