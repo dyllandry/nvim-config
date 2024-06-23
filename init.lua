@@ -368,15 +368,14 @@ require("lazy").setup({
                 -- end,
                 capabilities = nvim_cmp_capabilities
             })
-            -- Disabled for now to limit complexity.
             -- Config for Markdown language server. Big reason I want it is
             -- that in addition to regular markdown features like linking
             -- between files `[link to yesterday's file](/yesterday.md)`,
             -- marksman supports linking to specific headers in a file: `[link
             -- to yesterday's file](/yesterday)`
-            -- lspconfig.marksman.setup {
-            --     capabilities = nvim_cmp_capabilities
-            -- }
+            lspconfig.marksman.setup {
+                capabilities = nvim_cmp_capabilities
+            }
             -- Below we register keymaps after Nvim attaches to a language server.
             -- This autocmd will run whenever the LspAttach event fires.
             vim.api.nvim_create_autocmd('LspAttach', {
