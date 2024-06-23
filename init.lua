@@ -107,6 +107,10 @@ require("lazy").setup({
         end
     },
 
+    -- JSON autocompletion supported by JSON Schema. This plugin provides
+    -- access to a catalog of json schemas.
+    "b0o/schemastore.nvim",
+
     -- none-ls (continuation of deprecated project null-ls) allows non-lsp
     -- tools to integrate with nvim's lsp functionality. For example, a non-lsp
     -- tool like a spell checker could integrate with nvim's lsp client
@@ -375,6 +379,34 @@ require("lazy").setup({
             -- to yesterday's file](/yesterday)`
             lspconfig.marksman.setup {
                 capabilities = nvim_cmp_capabilities
+            }
+            -- Used with schema store to provide autocomplete to JSON files.
+            lspconfig.jsonls.setup {
+                capabilities = nvim_cmp_capabilities,
+                settings = {
+                    json = {
+                        schemas = require('schemastore').json.schemas(),
+                        validate = { enable = true },
+                    },
+                },
+            }
+            -- Used with schema store to provide autocomplete to YAML files.
+            require('lspconfig').yamlls.setup {
+                capabilities = nvim_cmp_capabilities,
+                settings = {
+                    yaml = {
+                        schemaStore = {
+                            -- From SchemStore docs:
+                            -- You must disable built-in schemaStore support if you want to use
+                            -- this plugin and its advanced options like `ignore`.
+                            enable = false,
+                            -- From SchemStore docs:
+                            -- Avoid TypeError: Cannot read properties of undefined (reading 'length')
+                            url = "",
+                        },
+                        schemas = require('schemastore').yaml.schemas(),
+                    },
+                },
             }
             -- Below we register keymaps after Nvim attaches to a language server.
             -- This autocmd will run whenever the LspAttach event fires.
