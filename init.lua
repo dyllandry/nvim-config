@@ -156,7 +156,7 @@ require("lazy").setup({
     -- more.
     {
         'nvim-telescope/telescope.nvim',
-        tag = '0.1.2',
+        branch = '0.1.x',
         dependencies = { 'nvim-lua/plenary.nvim' },
         config = function()
             require('telescope').setup{
@@ -230,6 +230,7 @@ require("lazy").setup({
                     "css",
                     "vue",
                     "lua",
+                    "vimdoc"
                 },
                 -- Enables the parsers to be installed and setup async so nvim
                 -- still opens fast when first opened and parsers in
