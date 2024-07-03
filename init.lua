@@ -90,6 +90,11 @@ require("lazy").setup({
         'MunifTanjim/prettier.nvim',
         opts = {
             bin = 'prettierd',
+            filetypes = {
+                "javascript",
+                "typescript",
+                "vue"
+            }
         }
     },
 
@@ -126,8 +131,13 @@ require("lazy").setup({
                 on_attach = function(client, bufnr)
                     if client.supports_method("textDocument/formatting") then
                         -- format on key press
+                        -- Don't use volar for formatting. Current way of formatting with only prettier.
+                        local filter_out_volar = function(client) return client.name ~= "volar" end
                         vim.keymap.set("n", "<Leader>f", function()
-                            vim.lsp.buf.format({ bufnr = vim.api.nvim_get_current_buf() })
+                            vim.lsp.buf.format({
+                                    bufnr = vim.api.nvim_get_current_buf(),
+                                    filter = filter_out_volar
+                                })
                         end, { buffer = bufnr, desc = "[lsp] format" })
                         -- format on save
                         vim.api.nvim_clear_autocmds({ buffer = bufnr, group = group })
@@ -135,7 +145,7 @@ require("lazy").setup({
                             buffer = bufnr,
                             group = group,
                             callback = function()
-                                vim.lsp.buf.format({ bufnr = bufnr, async = async })
+                                vim.lsp.buf.format({ bufnr = bufnr, async = async, filter = filter_out_volar })
                             end,
                             desc = "[lsp] format on save",
                         })
