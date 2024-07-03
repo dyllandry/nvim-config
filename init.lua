@@ -282,7 +282,23 @@ require("lazy").setup({
                 virtual_text = { source = true },
                 float = { source = 'always' }
             })
+            lspconfig.volar.setup({})
             lspconfig.tsserver.setup({
+                init_options = {
+                    plugins = {
+                        {
+                            name = "@vue/typescript-plugin",
+                            -- Could compute this with `nvm which <node version>` + /../../lib/ ...
+                            location = "/Users/dylan/.nvm/versions/node/v18.20.2/lib/node_modules/@vue/typescript-plugin",
+                            languages = {"javascript", "typescript", "vue"},
+                        },
+                    },
+                },
+                filetypes = {
+                    "javascript",
+                    "typescript",
+                    "vue",
+                },
                 handlers = {
                     ["textDocument/publishDiagnostics"] = function(
                         _,
