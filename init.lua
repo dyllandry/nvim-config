@@ -293,13 +293,14 @@ require("lazy").setup({
                 float = { source = 'always' }
             })
             lspconfig.volar.setup({})
-            lspconfig.tsserver.setup({
+            lspconfig.ts_ls.setup({
                 init_options = {
                     plugins = {
                         {
                             name = "@vue/typescript-plugin",
                             -- Could compute this with `nvm which <node version>` + /../../lib/ ...
-                            location = "/Users/dylan/.nvm/versions/node/v18.20.2/lib/node_modules/@vue/typescript-plugin",
+                            -- Must be same version as volar
+                            location = "/home/dylan/.nvm/versions/node/v20.11.0/lib/node_modules/@vue/typescript-plugin",
                             languages = {"javascript", "typescript", "vue"},
                         },
                     },
