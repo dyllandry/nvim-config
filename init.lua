@@ -32,9 +32,6 @@ vim.api.nvim_create_autocmd('BufEnter', {
 -- compatibility routines".
 vim.g.skip_ts_context_commentstring_module = true
 
-vim.keymap.set("n", "<Leader>td", "S- [ ] ")
-vim.keymap.set("i", "td", "[ ]")
-
 --------------------------------------------------------------------------------
 -- Install lazy.nvim plugin manager --------------------------------------------
 --------------------------------------------------------------------------------
