@@ -13,11 +13,10 @@
 vim.keymap.set('i', 'jk', '<Esc>')
 vim.opt.relativenumber = true
 vim.opt.number = true
-vim.opt.scrolloff = 10
+vim.opt.scrolloff = 5
 -- Ignore case unless capital letter in search.
 vim.o.ignorecase = true; vim.o.smartcase = true;
 vim.g.mapleader = ' '
-vim.o.tabstop = 4
 
 -- Markdown file settings
 vim.api.nvim_create_autocmd('BufEnter', {
