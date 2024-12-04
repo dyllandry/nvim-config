@@ -415,7 +415,7 @@ require("lazy").setup({
                 },
             }
             -- Used with schema store to provide autocomplete to YAML files.
-            require('lspconfig').yamlls.setup {
+            lspconfig.yamlls.setup {
                 capabilities = nvim_cmp_capabilities,
                 settings = {
                     yaml = {
@@ -432,7 +432,8 @@ require("lazy").setup({
                     },
                 },
             }
-            require'lspconfig'.dockerls.setup{}
+            lspconfig.dockerls.setup{}
+            lspconfig.bashls.setup{}
             -- Below we register keymaps after Nvim attaches to a language server.
             -- This autocmd will run whenever the LspAttach event fires.
             vim.api.nvim_create_autocmd('LspAttach', {
