@@ -434,6 +434,7 @@ require("lazy").setup({
             }
             lspconfig.dockerls.setup{}
             lspconfig.bashls.setup{}
+            lspconfig.terraformls.setup{}
             -- Below we register keymaps after Nvim attaches to a language server.
             -- This autocmd will run whenever the LspAttach event fires.
             vim.api.nvim_create_autocmd('LspAttach', {
