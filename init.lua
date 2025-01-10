@@ -17,6 +17,8 @@ vim.opt.scrolloff = 5
 -- Ignore case unless capital letter in search.
 vim.o.ignorecase = true; vim.o.smartcase = true;
 vim.g.mapleader = ' '
+-- Make tabs appear as 4 spaces wide.
+vim.o.tabstop = 4
 
 -- Markdown file settings
 vim.api.nvim_create_autocmd('BufEnter', {
