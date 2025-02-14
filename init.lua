@@ -19,6 +19,7 @@ vim.o.ignorecase = true; vim.o.smartcase = true;
 vim.g.mapleader = ' '
 -- Make tabs appear as 4 spaces wide.
 vim.o.tabstop = 4
+vim.o.list = true;
 
 -- Markdown file settings
 vim.api.nvim_create_autocmd('BufEnter', {
