@@ -1,27 +1,34 @@
 --------------------------------------------------------------------------------
--- Future Todo -----------------------------------------------------------------
---------------------------------------------------------------------------------
--- Support code action to extract visual selection to function.
--- Running into this bug: https://github.com/jose-elias-alvarez/typescript.nvim/issues/17
--- Maybe I can translate their implementation to Lua.
--- https://github.com/jose-elias-alvarez/typescript.nvim/commit/e4b780d6b686585cb345e16d444fd3d303da91bb
-
---------------------------------------------------------------------------------
 -- Generic Options -------------------------------------------------------------
 --------------------------------------------------------------------------------
 
+-- Use key sequence 'jk' to as the escape key.
 vim.keymap.set('i', 'jk', '<Esc>')
+
+-- The options 'relativenumber' and 'number' work together to configure line
+-- numbers on the left of the screen.
 vim.opt.relativenumber = true
 vim.opt.number = true
+
+-- 'scrolloff' will make sure to show some number of lines above and below
+-- where the cursor is at all times.
 vim.opt.scrolloff = 5
--- Ignore case unless capital letter in search.
-vim.o.ignorecase = true; vim.o.smartcase = true;
+
+-- Ignore case when searching unless the search includes a capital letter.
+vim.o.ignorecase = true;
+vim.o.smartcase = true;
+
+-- Use the space key as our leader. The 'leader' is a special key that comes
+-- before many hotkeys.
 vim.g.mapleader = ' '
+
 -- Make tabs appear as 4 spaces wide.
 vim.o.tabstop = 4
-vim.o.list = true;
 
--- Markdown file settings
+-- Show hidden characters like tabs and spaces.
+vim.o.list = true
+
+-- Settings that only apply for Markdown files.
 vim.api.nvim_create_autocmd('BufEnter', {
     pattern = '*.md',
     callback = function()
