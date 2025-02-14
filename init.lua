@@ -1,4 +1,18 @@
 --------------------------------------------------------------------------------
+-- Introduction ----------------------------------------------------------------
+--------------------------------------------------------------------------------
+-- Hi!
+--
+-- I want to be an expert at neovim! And to tame complexity! But I don't get
+-- much practice at taming complexity if I keep restarting from scratch when I
+-- feel overwhelmed.
+--
+-- Another way to treat that feeling of being overwhelmed is to return to this
+-- file and try to document it or simplify it. It can be done in small bits,
+-- just adding comments. Or in big efforts by critcizing dependencies and
+-- slimming it down.
+
+--------------------------------------------------------------------------------
 -- Generic Options -------------------------------------------------------------
 --------------------------------------------------------------------------------
 
