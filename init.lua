@@ -320,6 +320,7 @@ require("lazy").setup({
                             name = "@vue/typescript-plugin",
                             -- Could compute this with `nvm which <node version>` + /../../lib/ ...
                             -- Must be same version as volar
+                            -- This location depends on operating system. Linux is /home/dylan while macos is /Users/dylan
                             location = "/home/dylan/.nvm/versions/node/v20.11.0/lib/node_modules/@vue/typescript-plugin",
                             languages = {"javascript", "typescript", "vue"},
                         },
