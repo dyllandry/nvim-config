@@ -18,31 +18,23 @@
 
 -- Use key sequence 'jk' to as the escape key.
 vim.keymap.set('i', 'jk', '<Esc>')
-
--- The options 'relativenumber' and 'number' work together to configure line
--- numbers on the left of the screen.
-vim.opt.relativenumber = true
-vim.opt.number = true
-
--- 'scrolloff' will make sure to show some number of lines above and below
--- where the cursor is at all times.
-vim.opt.scrolloff = 5
-
--- Ignore case when searching unless the search includes a capital letter.
-vim.o.ignorecase = true;
-vim.o.smartcase = true;
-
 -- Use the space key as our leader. The 'leader' is a special key that comes
 -- before many hotkeys.
 vim.g.mapleader = ' '
-
 -- Make tabs appear as 4 spaces wide.
 vim.o.tabstop = 4
-
 -- Show hidden characters like tabs and spaces.
 vim.o.list = true
+-- 'scrolloff' will make sure to show some number of lines above and below
+-- where the cursor is at all times.
+vim.opt.scrolloff = 5
+-- The options 'relativenumber' and 'number' work together to configure line
+-- numbers on the left of the screen.
+vim.opt.relativenumber = true; vim.opt.number = true
+-- Ignore case when searching unless the search includes a capital letter.
+vim.o.ignorecase = true; vim.o.smartcase = true
 
--- Settings that only apply for Markdown files.
+-- Markdown settings
 vim.api.nvim_create_autocmd('BufEnter', {
     pattern = '*.md',
     callback = function()
@@ -350,7 +342,7 @@ require("lazy").setup({
                             -- Could compute this with `nvm which <node version>` + /../../lib/ ...
                             -- Must be same version as volar
                             -- This location depends on operating system. Linux is /home/dylan while macos is /Users/dylan
-                            location = "/home/dylan/.nvm/versions/node/v20.11.0/lib/node_modules/@vue/typescript-plugin",
+                            location = "/Users/dylan/.nvm/versions/node/v18.20.2/lib/node_modules/@vue/typescript-plugin",
                             languages = {"javascript", "typescript", "vue"},
                         },
                     },
