@@ -118,7 +118,7 @@ require("lazy").setup({
         }
     },
 
-    -- Git plugin
+    -- The Git plugin
     'tpope/vim-fugitive',
 
     -- Show diff signs in sign column
@@ -132,8 +132,8 @@ require("lazy").setup({
         end
     },
 
-    -- JSON autocompletion supported by JSON Schema. This plugin provides
-    -- access to a catalog of json schemas.
+    -- Provides access to a catalog of json schemas that are used by other plugins to
+    -- provide autocomplete while writing json and yaml.
     "b0o/schemastore.nvim",
 
     -- none-ls (continuation of deprecated project null-ls) allows non-lsp
@@ -295,15 +295,8 @@ require("lazy").setup({
     -- respective language server on your computer.
     {
         'neovim/nvim-lspconfig',
-        dependencies = {
-            'hrsh7th/cmp-nvim-lsp',
-        },
+        dependencies = { 'hrsh7th/cmp-nvim-lsp' },
         config = function()
-            local lspconfig = require('lspconfig')
-            -- nvim-cmp supports more LSP capabilities than omnifunc.
-            -- We will want to inform language servers of this.
-            local nvim_cmp_capabilities = require("cmp_nvim_lsp")
-                .default_capabilities()
             -- Makes it so that if you have multiple LSPs reporting
             -- diagnostics, the virtual text that appears on the buffer, and
             -- the floating window that shows when you jump to a diagnostic,
@@ -312,7 +305,43 @@ require("lazy").setup({
                 virtual_text = { source = true },
                 float = { source = 'always' }
             })
+            local lspconfig = require('lspconfig')
             lspconfig.volar.setup({})
+            lspconfig.dockerls.setup({})
+            lspconfig.bashls.setup({})
+            lspconfig.terraformls.setup({})
+            -- nvim-cmp supports more LSP capabilities than omnifunc. We will want to inform
+            -- language servers of this. I'm not sure for which language servers I'm supposed
+            -- to provide this.
+            local nvim_cmp_capabilities = require("cmp_nvim_lsp").default_capabilities()
+            lspconfig.eslint.setup({ capabilities = nvim_cmp_capabilities })
+            lspconfig.marksman.setup({ capabilities = nvim_cmp_capabilities })
+            lspconfig.jsonls.setup {
+                capabilities = nvim_cmp_capabilities,
+                settings = {
+                    json = {
+                        schemas = require('schemastore').json.schemas(),
+                        validate = { enable = true },
+                    },
+                },
+            }
+            lspconfig.yamlls.setup {
+                capabilities = nvim_cmp_capabilities,
+                settings = {
+                    yaml = {
+                        schemaStore = {
+                            -- From SchemaStore docs:
+                            -- You must disable built-in schemaStore support if you want to use
+                            -- this plugin and its advanced options like `ignore`.
+                            enable = false,
+                            -- From SchemStore docs:
+                            -- Avoid TypeError: Cannot read properties of undefined (reading 'length')
+                            url = "",
+                        },
+                        schemas = require('schemastore').yaml.schemas(),
+                    },
+                },
+            }
             lspconfig.ts_ls.setup({
                 init_options = {
                     plugins = {
@@ -405,61 +434,6 @@ require("lazy").setup({
             --     },
             --     capabilities = nvim_cmp_capabilities
             -- }
-            -- Eslint is a linting engine for JS and TS. This LSP shows it's
-            -- issues as diagnostics, and provides a command for automatically
-            -- fixing issues.
-            -- Would be cool on js/jsx/ts/tsx files on save to automatically run eslint then prettier.
-            -- Disabled for now, want to turn it on incrementally to verify it
-            -- is working how I expected.
-            lspconfig.eslint.setup({
-                -- I don't know why this is commented out.
-                -- on_attach = function(client, bufnr)
-                --     vim.api.nvim_create_autocmd("BufWritePre", {
-                --         buffer = bufnr,
-                --         command = "EslintFixAll",
-                --     })
-                -- end,
-                capabilities = nvim_cmp_capabilities
-            })
-            -- Config for Markdown language server. Big reason I want it is
-            -- that in addition to regular markdown features like linking
-            -- between files `[link to yesterday's file](/yesterday.md)`,
-            -- marksman supports linking to specific headers in a file: `[link
-            -- to yesterday's file](/yesterday)`
-            lspconfig.marksman.setup {
-                capabilities = nvim_cmp_capabilities
-            }
-            -- Used with schema store to provide autocomplete to JSON files.
-            lspconfig.jsonls.setup {
-                capabilities = nvim_cmp_capabilities,
-                settings = {
-                    json = {
-                        schemas = require('schemastore').json.schemas(),
-                        validate = { enable = true },
-                    },
-                },
-            }
-            -- Used with schema store to provide autocomplete to YAML files.
-            lspconfig.yamlls.setup {
-                capabilities = nvim_cmp_capabilities,
-                settings = {
-                    yaml = {
-                        schemaStore = {
-                            -- From SchemStore docs:
-                            -- You must disable built-in schemaStore support if you want to use
-                            -- this plugin and its advanced options like `ignore`.
-                            enable = false,
-                            -- From SchemStore docs:
-                            -- Avoid TypeError: Cannot read properties of undefined (reading 'length')
-                            url = "",
-                        },
-                        schemas = require('schemastore').yaml.schemas(),
-                    },
-                },
-            }
-            lspconfig.dockerls.setup{}
-            lspconfig.bashls.setup{}
-            lspconfig.terraformls.setup{}
             -- Below we register keymaps after Nvim attaches to a language server.
             -- This autocmd will run whenever the LspAttach event fires.
             vim.api.nvim_create_autocmd('LspAttach', {
