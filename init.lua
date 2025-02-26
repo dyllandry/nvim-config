@@ -46,7 +46,9 @@ vim.api.nvim_create_autocmd('BufEnter', {
 
 -- Speeds up loading of nvim-ts-context-commentstring by skipping "backwards
 -- compatibility routines".
-vim.g.skip_ts_context_commentstring_module = true
+-- 2025-02-26: Disabling. If I don't notice any slowness for a while I can
+-- enable it again.
+-- vim.g.skip_ts_context_commentstring_module = true
 
 --------------------------------------------------------------------------------
 -- Install lazy.nvim plugin manager --------------------------------------------
