@@ -41,13 +41,8 @@ myModule.setupLazyPluginManager()
 -- Where possible these plugins are ordered by configuration simplicity.
 require("lazy").setup({
     'tpope/vim-repeat',
-    {
-        'justinmk/vim-sneak',
-        -- config = function ()
-        --     vim.keymap.set({'n','v'}, 'f', '<Plug>Sneak_s')
-        --     vim.keymap.set({'n','v'}, 'F', '<Plug>Sneak_S')
-        -- end
-    },
+    -- The Git plugin
+    'tpope/vim-fugitive',
     -- Automatically sets vim's tab settings to match the current file.
     'tpope/vim-sleuth',
     -- Plugin to easily surround text.
@@ -65,9 +60,7 @@ require("lazy").setup({
         priority = 1000,
         config = function()
             require('onedark').setup {
-                -- style = 'dark'
                 style = 'light'
-                -- style = 'warm'
             }
             require('onedark').load()
         end
@@ -126,9 +119,6 @@ require("lazy").setup({
     --     }
     -- },
 
-    -- -- The Git plugin
-    -- 'tpope/vim-fugitive',
-    --
     -- -- Show diff signs in sign column
     -- {
     --     'airblade/vim-gitgutter',
