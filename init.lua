@@ -1,3 +1,33 @@
+-- Todo {{{
+-- - [ ] find a plugin for showing LSP stuff
+--     - show symbols when I type
+--     - toggle symbols shortcut
+--     - show signature help when I start typing params
+--     - toggle signature help shortcut
+--     - show virtual text for lsp diagnostic when I do ]d and [d
+--     - toggle show all diagnostic virtual text shortcut
+--     - show num file diagnostics in status bar
+--     - show numb workspace diagnostics in status bar
+-- - [ ] setup some own LSP shortcuts
+--     - I like `<leader/space>d<letter>`.
+--     - I relate "d" to LSPs because d means "diagnostics".
+--         - " dd": go to [d]eclaration
+--             - vim.lsp.buf.implementation()
+--         - " dt": go to [t]ype declaration
+--             - vim.lsp.buf.type_definition()
+--         - " dfr": [f]ind [r]eferences
+--             - vim.lsp.buf.references()
+--         - " dcr": [c]ode action [r]ename
+--             - vim.lsp.buf.rename()
+--         - " dca": show [c]ode [a]ctions
+--             - vim.lsp.buf.code_action()
+--         - " ss": [s]earch [s]ymbols using telescope
+--             - Telescope lsp_definitions
+--             - There's probably other useful LSP searches.
+--                 - Telescope lsp_document_symbols
+--                 - Telescope lsp_references
+-- }}}
+
 -- Tabs {{{
 -- Plugin vim-sleuth auto-detects tab settings for each file.
 -- Default tab settings:
