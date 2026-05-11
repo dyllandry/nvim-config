@@ -1,3 +1,15 @@
+-- 🥤 Refresher 🍟
+-- "zo" to [o]pen fold
+-- "zc" to [c]lose fold
+-- "zr" to [r]ecursively open 1 level of folds
+-- "zR" to [r]ecursively open all level of folds
+-- "zm" to recursively [m]inimize 1 level of folds
+-- "zM" to recursively [m]inimize all level of folds
+
+-- Fold markers {{{
+vim.o.foldmethod = 'marker'
+-- }}}
+
 -- Todo {{{
 -- - [ ] find a plugin for showing LSP stuff
 --     - show symbols when I type
@@ -17,7 +29,7 @@
 --             - vim.lsp.buf.type_definition()
 --         - " dfr": [f]ind [r]eferences
 --             - vim.lsp.buf.references()
---         - " dcr": [c]ode action [r]ename
+--         - " dr": [r]ename
 --             - vim.lsp.buf.rename()
 --         - " dca": show [c]ode [a]ctions
 --             - vim.lsp.buf.code_action()
@@ -58,7 +70,6 @@ vim.o.smartcase = true
 -- Other settings {{{
 vim.keymap.set('i', 'jk', '<Esc>')
 vim.g.mapleader = ' '
-vim.o.foldmethod = 'marker'
 -- }}}
 
 -- Markdown settings {{{
@@ -73,12 +84,65 @@ vim.api.nvim_create_autocmd('BufEnter', {
 -- }}}
 
 -- LSP settings {{{
-vim.lsp.config['typescript'] = {
-    cmd = { 'typescript-language-server', '--stdio' },
-    filetypes = { 'typescript' },
-    root_markers = { 'tsconfig.json' },
+vim.keymap.set('n', '<leader>dr', vim.lsp.buf.rename)
+-- Depends on installing shellcheck and bash-language-server
+vim.lsp.config['bash-language-server'] = {
+    cmd = { 'bash-language-server', 'start' },
+    filetypes = { 'bash', 'sh' },
 }
-vim.lsp.enable('typescript')
+vim.lsp.enable('bash-language-server')
+-- Vue lsp configuration was taken from https://github.com/vuejs/language-tools/wiki/Neovim
+local typescript_language_server_filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue' }
+local vue_language_server_path = '/Users/dylan/.nvm/versions/node/v20.19.4/lib/node_modules/@vue/language-server'
+local vue_plugin = {
+  name = '@vue/typescript-plugin',
+  location = vue_language_server_path,
+  languages = { 'vue' },
+  configNamespace = 'typescript',
+}
+vim.lsp.config['typescript-language-server'] = {
+    cmd = { 'typescript-language-server', '--stdio' },
+    filetypes = typescript_language_server_filetypes,
+    root_markers = { 'tsconfig.json' },
+      init_options = {
+        plugins = {
+          vue_plugin,
+        },
+      },
+}
+local vue_ls_config = {
+  cmd = { 'vue-language-server', '--stdio' },
+  filetypes = { 'vue' },
+  root_markers = { 'vite.config.js' },
+  on_init = function(client)
+    client.handlers['tsserver/request'] = function(_, result, context)
+      local clients = vim.lsp.get_clients({ bufnr = context.bufnr, name = 'typescript-language-server' })
+      if #clients == 0 then
+        vim.notify('Could not find `vtsls` or `ts_ls` lsp client, `vue_ls` would not work without it.', vim.log.levels.ERROR)
+        return
+      end
+      local ts_client = clients[1]
+      local param = unpack(result)
+      local id, command, payload = unpack(param)
+      ts_client:exec_cmd({
+        title = 'vue_request_forward',
+        command = 'typescript.tsserverRequest',
+        arguments = {
+          command,
+          payload,
+        },
+      }, { bufnr = context.bufnr }, function(_, r)
+          local response = r and r.body
+          local response_data = { { id, response } }
+          ---@diagnostic disable-next-line: param-type-mismatch
+          client:notify('tsserver/response', response_data)
+        end)
+    end
+  end,
+}
+vim.lsp.config('vue_ls', vue_ls_config)
+vim.lsp.enable({'typescript-language-server', 'vue_ls'})
+
 -- }}}
 
 -- Plugins {{{
