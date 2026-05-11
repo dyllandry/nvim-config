@@ -74,12 +74,12 @@ vim.g.mapleader = ' '
 
 -- Markdown settings {{{
 vim.api.nvim_create_autocmd('BufEnter', {
-    pattern = '*.md',
-    callback = function()
-        -- vim.opt.wrap = true
-        vim.opt.linebreak = true
-        vim.o.breakindent = true
-    end
+  pattern = '*.md',
+  callback = function()
+    -- vim.opt.wrap = true
+    vim.opt.linebreak = true
+    vim.o.breakindent = true
+  end
 })
 -- }}}
 
@@ -87,8 +87,8 @@ vim.api.nvim_create_autocmd('BufEnter', {
 vim.keymap.set('n', '<leader>dr', vim.lsp.buf.rename)
 -- Depends on installing shellcheck and bash-language-server
 vim.lsp.config['bash-language-server'] = {
-    cmd = { 'bash-language-server', 'start' },
-    filetypes = { 'bash', 'sh' },
+  cmd = { 'bash-language-server', 'start' },
+  filetypes = { 'bash', 'sh' },
 }
 vim.lsp.enable('bash-language-server')
 -- Vue lsp configuration was taken from https://github.com/vuejs/language-tools/wiki/Neovim
@@ -101,14 +101,14 @@ local vue_plugin = {
   configNamespace = 'typescript',
 }
 vim.lsp.config['typescript-language-server'] = {
-    cmd = { 'typescript-language-server', '--stdio' },
-    filetypes = typescript_language_server_filetypes,
-    root_markers = { 'tsconfig.json' },
-      init_options = {
-        plugins = {
-          vue_plugin,
-        },
-      },
+  cmd = { 'typescript-language-server', '--stdio' },
+  filetypes = typescript_language_server_filetypes,
+  root_markers = { 'tsconfig.json' },
+  init_options = {
+    plugins = {
+      vue_plugin,
+    },
+  },
 }
 local vue_ls_config = {
   cmd = { 'vue-language-server', '--stdio' },
@@ -131,12 +131,14 @@ local vue_ls_config = {
           command,
           payload,
         },
-      }, { bufnr = context.bufnr }, function(_, r)
-          local response = r and r.body
-          local response_data = { { id, response } }
-          ---@diagnostic disable-next-line: param-type-mismatch
-          client:notify('tsserver/response', response_data)
-        end)
+      },
+      { bufnr = context.bufnr },
+      function(_, r)
+        local response = r and r.body
+        local response_data = { { id, response } }
+        ---@diagnostic disable-next-line: param-type-mismatch
+        client:notify('tsserver/response', response_data)
+      end)
     end
   end,
 }
@@ -151,58 +153,58 @@ myModule.setupLazyPluginManager()
 
 -- All plugin configs {{{
 require("lazy").setup({
-    -- Order plugins by how simple their config is.
-    'wsdjeg/vim-fetch',
-    'tpope/vim-repeat',
-    'tpope/vim-fugitive',
-    'airblade/vim-gitgutter',
-    'tpope/vim-sleuth',
-    'tpope/vim-surround',
-    {
-      'preservim/nerdtree',
-      config = function ()
-        vim.g.NERDTreeWinSize = 40
-      end
-    },
-    {
-        "navarasu/onedark.nvim",
-        priority = 1000,
-        config = function()
-            require('onedark').setup {
-                style = 'light'
-            }
-            require('onedark').load()
-        end
-    },
-    {
-        'nvim-telescope/telescope.nvim',
-        branch = '0.1.x',
-        dependencies = { 'nvim-lua/plenary.nvim' },
-        config = function()
-            require('telescope').setup{
-                defaults = {
-                    file_ignore_patterns = { 'package%-lock%.json' },
-                    mappings = {
-                        i = {
-                            -- This disables telescope's default mapping for
-                            -- Ctrl-u in insert mode from scrolling the preview
-                            -- window up. Instead, it will clear the prompt.
-                            ["<C-u>"] = false
-                        },
-                    },
-                    -- This will change the layout of telescope so it fits well
-                    -- in skinny windows.
-                    layout_strategy = 'vertical',
-                    layout_config = {
-                        preview_cutoff = 22
-                    }
-                }
-            }
-            local builtin = require('telescope.builtin')
-            vim.keymap.set('n', '<leader>sf', builtin.find_files, {})
-            vim.keymap.set('n', '<leader>sg', builtin.live_grep, {})
-        end
-    },
+  -- Order plugins by how simple their config is.
+  'wsdjeg/vim-fetch',
+  'tpope/vim-repeat',
+  'tpope/vim-fugitive',
+  'airblade/vim-gitgutter',
+  'tpope/vim-sleuth',
+  'tpope/vim-surround',
+  {
+    'preservim/nerdtree',
+    config = function ()
+    vim.g.NERDTreeWinSize = 40
+    end
+  },
+  {
+    "navarasu/onedark.nvim",
+    priority = 1000,
+    config = function()
+      require('onedark').setup {
+        style = 'light'
+      }
+      require('onedark').load()
+    end
+  },
+  {
+    'nvim-telescope/telescope.nvim',
+    branch = '0.1.x',
+    dependencies = { 'nvim-lua/plenary.nvim' },
+    config = function()
+      require('telescope').setup{
+        defaults = {
+          file_ignore_patterns = { 'package%-lock%.json' },
+          mappings = {
+            i = {
+              -- This disables telescope's default mapping for
+              -- Ctrl-u in insert mode from scrolling the preview
+              -- window up. Instead, it will clear the prompt.
+              ["<C-u>"] = false
+            },
+          },
+          -- This will change the layout of telescope so it fits well
+          -- in skinny windows.
+          layout_strategy = 'vertical',
+          layout_config = {
+            preview_cutoff = 22
+          }
+        }
+      }
+      local builtin = require('telescope.builtin')
+      vim.keymap.set('n', '<leader>sf', builtin.find_files, {})
+      vim.keymap.set('n', '<leader>sg', builtin.live_grep, {})
+    end
+  },
 })
 -- }}}
 
